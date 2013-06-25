@@ -9,6 +9,7 @@
     References:
     http://www.ibm.com/developerworks/aix/library/au-threadingpython/
     http://wiki.python.org/moin/PythonDecoratorLibrary#Asynchronous_Call
+    http://hg.python.org/cpython/file/3.3/Lib/concurrent/futures/thread.py
 
 """
 __all__ = [

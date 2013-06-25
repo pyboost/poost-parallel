@@ -5,6 +5,8 @@
 # Created 06/24/2013, updated 06/24/2013
 #
 """ Helper functions and templates for multiprocessing.
+
+    http://hg.python.org/cpython/file/3.3/Lib/concurrent/futures/process.py
 """
 __all__ = [
 

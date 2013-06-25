@@ -17,8 +17,8 @@ from __future__ import absolute_import
 print('Executing %s' %  __file__)
 
 import sys
-if sys.version_info[:2] < (2, 6):
-    raise ImportError("CPython 2.6.x or above is required (%d.%d detected)."
+if not (2, 6) <= sys.version_info < (3, ):
+    raise ImportError("CPython 2.6.x or 2.7.x is required (%d.%d detected)."
                       % sys.version_info[:2])
 
 
