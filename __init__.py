@@ -4,6 +4,13 @@
 # Created 06/24/2013, updated 06/24/2013
 #
 """ Helper functions and templates for parallel computing.
+
+    Recommended usage, e.g.
+    >>> import poost.parallel as parallel
+    >>>
+    >>> @parallel.chainedthreads
+    >>> def foobar(): pass
+
 """
 from __future__ import absolute_import
 
