@@ -13,8 +13,7 @@
 
 """
 __all__ = [
-    'WorkerThread',
-    'ThreadPoolChain',
+    'ThreadPoolsChain',
 ]
 print('Executing %s' %  __file__)
 
@@ -22,24 +21,18 @@ import Queue
 import threading
 
 
-class WorkerThread (threading.Thread):
+def worker (func, inque, outque):
     """ A worker thread that gets data from an input queue, calls a specified
         function, and puts the (indexed) result into an output queue.
     """
-    def __init__ (self, func, inque, outque):
-        threading.Thread.__init__(self)
-        self.func = func
-        self.inque = inque
-        self.outque = outque
-    def run (self):
-        while True:
-            index, item = self.inque.get()  # blocking
-            output = self.func(item)
-            self.outque.put((index, output))
-            self.inque.task_done()
+    for index, item in iter(inque.get, '__STOP__'):
+        # inque.get is called until it returns the sentinel
+        output = func(item)
+        outque.put((index, output))
+        inque.task_done()
 
 
-class ThreadPoolChain (object):
+class ThreadPoolsChain (object):
     """ Asynchronous worker-thread pools chained by queues.
     """
     def __init__ (self, *funcs_workers):
@@ -47,13 +40,17 @@ class ThreadPoolChain (object):
             e.g. ThreadPoolchain( (func1, num1), (func2, num2) )
             means num1 workers for func1, num2 workers for func2.
         """
-        numpools = len(funcs_workers)
+        self.numpools = len(funcs_workers)
+        self.numworkerslist = []
         #self.pools = [[] for _ in xrange(numpools)]
-        self.queues = [Queue.Queue() for _ in xrange(numpools + 1)]
+        self.queues = [Queue.Queue() for _ in xrange(self.numpools + 1)]
         for i, (func, numworkers) in enumerate(funcs_workers):
-            for _ in range(numworkers):
-                t = WorkerThread (func, self.queues[i], self.queues[i+1])
-                t.daemon = True
+            self.numworkerslist.append(numworkers)
+            for _ in xrange(numworkers):
+                t = threading.Thread(target=worker, args=[
+                    func, self.queues[i], self.queues[i+1]
+                ])
+                t.daemon = True  # unnecessary
                 t.start()
                 #self.pools[i].append(t)
 
@@ -79,6 +76,14 @@ class ThreadPoolChain (object):
         #    self.queues[i].join()
         return outputs
 
+    def stop (self):
+        """ Stop the whole pools chain.
+        """
+        for i in xrange(self.numpools):
+            numworkers = self.numworkerslist[i]
+            for j in xrange(numworkers):
+                self.queues[i].put('__STOP__')
+
 
 if __name__ == '__main__':
 
@@ -98,7 +103,7 @@ if __name__ == '__main__':
             soup = BeautifulSoup(chunk)
             return soup.findAll(['title'])
 
-        tpc = ThreadPoolChain (
+        tpc = ThreadPoolsChain (
             (urlchunk, 4),
             (datamine, 2)
         )
@@ -114,6 +119,8 @@ if __name__ == '__main__':
             "http://www.mit.edu",
             "http://www.cs.umn.edu",
         ])
+        tpc.stop()
+
         for i, res in enumerate(results):
             print i, res
         print('Done. Time elapsed: %.2f.' % (time.time() - t0))
