@@ -30,6 +30,7 @@ def worker (func, inque, outque):
         output = func(item)
         outque.put((index, output))
         inque.task_done()
+    #print 'died'
 
 
 class ThreadPoolsChain (object):
@@ -50,7 +51,7 @@ class ThreadPoolsChain (object):
                 t = threading.Thread(target=worker, args=[
                     func, self.queues[i], self.queues[i+1]
                 ])
-                t.daemon = True  # unnecessary
+                #t.daemon = True  # unnecessary
                 t.start()
                 #self.pools[i].append(t)
 
@@ -83,46 +84,3 @@ class ThreadPoolsChain (object):
             numworkers = self.numworkerslist[i]
             for j in xrange(numworkers):
                 self.queues[i].put('__STOP__')
-
-
-if __name__ == '__main__':
-
-    def _example1():
-        # Usage example, abstracted from
-        # http://www.ibm.com/developerworks/aix/library/au-threadingpython/
-        import time
-        import urllib2
-        from BeautifulSoup import BeautifulSoup
-
-        def urlchunk (host):
-            url = urllib2.urlopen(host)
-            chunk = url.read()
-            return chunk
-
-        def datamine (chunk):
-            soup = BeautifulSoup(chunk)
-            return soup.findAll(['title'])
-
-        tpc = ThreadPoolsChain (
-            (urlchunk, 4),
-            (datamine, 2)
-        )
-
-        t0 = time.time()
-        results =  tpc.feed([
-            "http://google.com",
-            "http://yahoo.com",
-            "http://google.com",
-            "http://amazon.com",
-            "http://ibm.com",
-            "http://apple.com",
-            "http://www.mit.edu",
-            "http://www.cs.umn.edu",
-        ])
-        tpc.stop()
-
-        for i, res in enumerate(results):
-            print i, res
-        print('Done. Time elapsed: %.2f.' % (time.time() - t0))
-
-    _example1()
