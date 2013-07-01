@@ -15,7 +15,7 @@
 __all__ = [
     'ThreadPoolsChain',
 ]
-print('Executing %s' %  __file__)
+#print('Executing %s' %  __file__)
 
 import Queue
 import threading
@@ -48,9 +48,9 @@ class ThreadPoolsChain (object):
         for i, (func, numworkers) in enumerate(funcs_workers):
             self.numworkerslist.append(numworkers)
             for _ in xrange(numworkers):
-                t = threading.Thread(target=worker, args=[
+                t = threading.Thread(target=worker, args=(
                     func, self.queues[i], self.queues[i+1]
-                ])
+                ))
                 #t.daemon = True  # unnecessary
                 t.start()
                 #self.pools[i].append(t)

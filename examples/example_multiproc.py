@@ -45,7 +45,7 @@ if __name__ == '__main__':
     )
 
     t0 = time.time()
-    results =  ppc.feed([
+    urls = [
         "http://google.com",
         "http://yahoo.com",
         "http://google.com",
@@ -54,10 +54,21 @@ if __name__ == '__main__':
         "http://apple.com",
         "http://www.mit.edu",
         "http://www.cs.umn.edu",
-    ])
+    ]
+    results =  ppc.feed(urls)
     ppc.stop()
 
     for i, res in enumerate(results):
         print i, res
     print('Done. Time elapsed: %.2f.' % (time.time() - t0))
+
+
+    # test 1 single pool
+    ppc1 = parallel.ProcessPoolsChain(
+        (urlchunk, 4)
+    )
+    results1 = ppc1.feed(urls)
+    ppc1.stop()
+    for i, chunk in enumerate(results1):
+        print i, len(chunk)
 

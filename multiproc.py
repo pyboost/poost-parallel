@@ -12,7 +12,7 @@
 __all__ = [
     'ProcessPoolsChain',
 ]
-print('Executing %s' %  __file__)
+#print('Executing %s' %  __file__)
 
 import os, sys, time
 from multiprocessing import Manager, Process, Pool, Pipe, Queue
@@ -45,7 +45,6 @@ class ProcessPoolsChain (object):
                 Process(target=worker, args=(
                     func, self.queues[i], self.queues[i+1]
                 )).start()
-                print func, _
 
     def feed (self, inputs):
         """ Feeds a sequence of data into the (first) input queue, and obtains
