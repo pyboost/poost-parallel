@@ -21,7 +21,7 @@ from multiprocessing import Manager, Process, Pool, Pipe, Queue
 def worker (func, inque, outque):
     """ Worker process.
     """
-    for index, item in iter(inque.get, 'STOP'):
+    for index, item in iter(inque.get, '__STOP__'):
         # the 2nd form of iter:
         # the callable is called until it returns the sentinel
         output = func(item)
@@ -70,5 +70,5 @@ class ProcessPoolsChain (object):
         for i in xrange(self.numpools):
             numworkers = self.numworkerslist[i]
             for j in xrange(numworkers):
-                self.queues[i].put('STOP')
+                self.queues[i].put('__STOP__')
 

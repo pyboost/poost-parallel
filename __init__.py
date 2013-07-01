@@ -1,17 +1,11 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 Pengkui Luo <pengkui.luo@gmail.com>
-# Created 06/24/2013, updated 06/24/2013
+# Created 06/24/2013, updated 07/01/2013
 #
 """ Helper functions and templates for parallel computing.
-
-    Recommended usage, e.g.
-    >>> import poost.parallel as parallel
-    >>>
-    >>> @parallel.chainedthreads
-    >>> def foobar(): pass
-
 """
+
 from __future__ import absolute_import
 
 print('Executing %s' %  __file__)
@@ -28,4 +22,4 @@ from .multithread import *
 
 del sys, absolute_import
 
-__version__ = '0.1.0'
+__version__ = '0.1.1'
