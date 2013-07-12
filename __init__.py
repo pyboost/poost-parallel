@@ -22,4 +22,4 @@ from .multithread import *
 
 del sys, absolute_import
 
-__version__ = '0.1.2-a2'
+__version__ = '0.1.2-a3'
