@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 #
 # Copyright (C) 2013 Pengkui Luo <pengkui.luo@gmail.com>
-# Created 06/24/2013, updated 07/01/2013
+# Created 06/24/2013, updated 07/19/2013
 #
 """ Helper functions and templates for parallel computing.
 """
@@ -22,4 +22,4 @@ from .multithread import *
 
 del sys, absolute_import
 
-__version__ = '0.1.2-a3'
+__version__ = '0.13.2-a3'
